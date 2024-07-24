@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useRouter } from "next/navigation"
+import axios from "axios"
 
 
 export default function Signup() {
@@ -20,9 +21,29 @@ export default function Signup() {
     router.push("/")
   }
 
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    // console.log(e.target)
+    const formData = new FormData(e.currentTarget);
+    // console.log(formData)
+
+    try {
+      const response = await axios.post("/api/home", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      console.log("response", response.data);// Access the data property from the response
+
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+    router.push("/home") 
+  
+  }
     return (
       <main className="flex min-h-screen flex-col items-center">
-         <form action="/home" method="POST" className="m-auto">
+        <form onSubmit={handleSubmit } className="m-auto">
                 <p onClick={handleClick} className="hover:bg-gradient-to-t from-yellow-500 cursor-pointer hover:scale-105
    rounded to-black text-white mb-7 font-mono text-lg text-center animate-bounce hover:animate-none">Login</p>
       <p className="text-white mb-5 font-mono text-sm text-center">or</p>
@@ -48,8 +69,7 @@ export default function Signup() {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
-                  <Input
-                    name="email"
+            <Input name="email"
               id="email"
               type="email"
               placeholder="m@example.com"

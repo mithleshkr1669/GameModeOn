@@ -11,8 +11,16 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useRouter } from "next/navigation";
+import { useRouter,redirect } from "next/navigation";
 import axios from "axios";
+import bcrypt from "bcryptjs";
+
+
+
+const saltRounds = 10;
+
+
+
 
 export function LoginForm() {
   const router = useRouter();
@@ -23,7 +31,7 @@ export function LoginForm() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log(e.target)
+    // console.log(e.target)
     const formData = new FormData(e.currentTarget);
     console.log(formData)
 
@@ -33,11 +41,23 @@ export function LoginForm() {
           'Content-Type': 'multipart/form-data'
         }
       });
-      console.log("response", response.data);  // Access the data property from the response
+      console.log("response", response.data);// Access the data property from the response
+      const password=response.data.password
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+      const result = await bcrypt.compare(password, hashedPassword)
+      console.log(result)
+
     } catch (error) {
       console.error("Error submitting form:", error);
     }
+    router.push("/home") 
+  
   }
+
+ 
+
+
 
   return (
     <form onSubmit={handleSubmit} className="m-auto">
@@ -67,7 +87,7 @@ export function LoginForm() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full">Sign in</Button>
+          <Button  type="submit" className="w-full">Sign in</Button>
         </CardFooter>
       </Card>
     </form>
