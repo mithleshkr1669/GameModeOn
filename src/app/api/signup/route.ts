@@ -1,13 +1,8 @@
 // require('dotenv').config();
 import { NextRequest, NextResponse } from "next/server"
 // import { Form } from "react-hook-form"
-import pg from "pg";
-import bcrypt from "bcrypt";
-
-const saltRounds = 10
-
-
-// const password=process.env.PASSWORD?.trim()===''
+import bcrypt from "bcryptjs";
+import pg from "pg"
 
 const db = new pg.Client({
     user:'postgres',
@@ -20,10 +15,15 @@ const db = new pg.Client({
 
 db.connect();
 
+const saltRounds = 10
+
+
+// const password=process.env.PASSWORD?.trim()===''
 
 
 export async function POST(req:NextRequest, res:NextResponse):Promise<NextResponse>{
     //Get the Form Data
+    console.log("sign up route page")
     const Formdata = await req.formData();
     const first_name = Formdata.get('first-name');
     const last_name = Formdata.get('last-name');
@@ -39,7 +39,8 @@ export async function POST(req:NextRequest, res:NextResponse):Promise<NextRespon
         } else {
             console.log("print response :", res)
         }
-    })
+     })
+    // db.end();
     //Response 
     return NextResponse.json({email,password})
 }

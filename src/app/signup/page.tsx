@@ -20,7 +20,7 @@ export default function Signup() {
   function handleClick() {
     router.push("/")
   }
-
+console.log("signup page")
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     // console.log(e.target)
@@ -28,7 +28,7 @@ export default function Signup() {
     // console.log(formData)
 
     try {
-      const response = await axios.post("/api/home", formData, {
+      const response = await axios.post("/api/signup", formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

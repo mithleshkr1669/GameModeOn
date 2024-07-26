@@ -13,17 +13,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter,redirect } from "next/navigation";
 import axios from "axios";
-import bcrypt from "bcryptjs";
-
-
-
-const saltRounds = 10;
 
 
 
 
 export function LoginForm() {
   const router = useRouter();
+  console.log("login page")
 
   function handleClick() {
     router.push("/signup");
@@ -33,25 +29,19 @@ export function LoginForm() {
     e.preventDefault();
     // console.log(e.target)
     const formData = new FormData(e.currentTarget);
-    console.log(formData)
+    // const email = formData.get('email');
+    // const password = String(formData.get('password'));
+
 
     try {
-      const response = await axios.post("/api/home", formData, {
+     const response=await axios.post("/api/login", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      console.log("response", response.data);// Access the data property from the response
-      const password=response.data.password
-      const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-      const result = await bcrypt.compare(password, hashedPassword)
-      console.log(result)
-
+            'Content-Type': 'multipart/form-data'
+          }
+        })
     } catch (error) {
-      console.error("Error submitting form:", error);
-    }
-    router.push("/home") 
+      console.log("error: ",error)
+   }
   
   }
 
